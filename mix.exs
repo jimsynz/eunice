@@ -14,7 +14,8 @@ defmodule Eunice.MixProject do
       listeners: listeners(Mix.target(), Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      releases: [{@app, release()}]
+      releases: [{@app, release()}],
+      aliases: aliases()
     ]
   end
 
@@ -33,6 +34,22 @@ defmodule Eunice.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:sourceror, "~> 1.7", runtime: false, only: [:dev, :test]},
+      {:lazy_html, ">= 0.1.0", only: :test},
+      {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
+      {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
+      {:phoenix_html, "~> 4.1"},
+      {:phoenix_live_view, "~> 1.0"},
+      {:telemetry_poller, "~> 1.0"},
+      {:telemetry_metrics, "~> 1.0"},
+      {:bandit, "~> 1.5"},
+      {:phoenix, "~> 1.7"},
+      {:vintage_net_wifi, "~> 0.12", targets: [:trellis]},
+      {:video_interop, "~> 0.1.1"},
+      {:emerge, "== 0.4.0-beta.1"},
+      {:eink,
+       [git: "https://github.com/emerge-elixir/eink.git", branch: "feat/imperative-gray2"]},
+      {:hts221, [git: "https://harton.dev/james/hts221.git", branch: "main"]},
       {:circuits_i2c, "~> 2.1"},
       {:circuits_gpio, "~> 2.1"},
       {:sunxi,
@@ -89,4 +106,16 @@ defmodule Eunice.MixProject do
   # Uncomment the following line if using Phoenix > 1.8.
   # defp listeners(:host, :dev), do: [Phoenix.CodeReloader]
   defp listeners(_, _), do: []
+
+  defp aliases() do
+    [
+      firmware: ["assets.deploy", "bb_nsk.prune_nifs", "firmware"],
+      test: ["bb_nsk.restore_nifs", "test"],
+      run: ["bb_nsk.restore_nifs", "run"],
+      "assets.setup": ["esbuild.install --if-missing", "tailwind.install --if-missing"],
+      "assets.build": ["compile", "esbuild eunice", "tailwind eunice"],
+      "assets.deploy": ["esbuild eunice --minify", "tailwind eunice --minify", "phx.digest"],
+      setup: ["deps.get", "assets.setup", "assets.build"]
+    ]
+  end
 end

@@ -53,7 +53,7 @@ config :nerves_ssh,
 #
 # See https://github.com/nerves-networking/vintage_net for more information
 config :vintage_net,
-  regulatory_domain: "00",
+  regulatory_domain: "NZ",
   config: [
     {"usb0", %{type: VintageNetDirect}},
     {"eth0",
@@ -93,6 +93,19 @@ config :mdns_lite,
       transport: "tcp",
       port: 4369
     }
+  ]
+
+config :eink,
+  driver: EInk.Driver.UC8276,
+  width: 400,
+  height: 300,
+  palette: :bw,
+  driver_config: [
+    spi_device: "spidev0.0",
+    dc_pin: "EPD_DC",
+    reset_pin: "EPD_RESET",
+    busy_pin: "EPD_BUSY",
+    spi_opts: [speed_hz: 10_000_000]
   ]
 
 # Import target specific config. This must remain at the bottom

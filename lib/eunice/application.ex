@@ -12,7 +12,12 @@ defmodule Eunice.Application do
         # Children for all targets
         # Starts a worker by calling: Eunice.Worker.start_link(arg)
         # {Eunice.Worker, arg},
-        {Eunice.Robot, robot_opts()}
+        EuniceWeb.Telemetry,
+        BB.NSK.Network.Monitor,
+        BB.NSK.Display.Supervisor,
+        {Phoenix.PubSub, [name: Eunice.PubSub]},
+        {Eunice.Robot, robot_opts()},
+        EuniceWeb.Endpoint
       ] ++ target_children()
 
     # See https://elixir.hexdocs.pm/Supervisor.html

@@ -5,5 +5,5 @@
     "{config,lib,test}/**/*.{ex,exs}",
     "rootfs_overlay/etc/iex.exs"
   ],
-  import_deps: [:bb_parameter_store_cubdb, :bb, :bb_nsk]
+  import_deps: [:bb_liveview, :phoenix, :bb_parameter_store_cubdb, :bb, :bb_nsk]
 ]
